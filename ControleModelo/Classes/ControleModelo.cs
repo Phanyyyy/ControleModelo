@@ -13,6 +13,15 @@ namespace ControleModelo.Classes
         {
             ObjetosModelo = new List<ObjetoModelo>();
         }
+        public void Salvar()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { typeof(ControleModelo), typeof(VigaModelo) });
+
+            TextWriter writer = new StreamWriter("D:\\arquivoteste.MMD");
+            serializer.Serialize(writer, this);
+            writer.Close();
+
+    }
     }
     public class ObjetoModelo
     {

@@ -28,18 +28,10 @@ namespace ControleModelo
                 if (objeto is Tekla.Structures.Model.Beam)
                 {
                     var Viga = objeto as Tekla.Structures.Model.Beam;
-                    var VigaSistema = new VigaModelo();
-
-                    VigaSistema.Perfil = Viga.Profile.ProfileString;
-                    VigaSistema.Material = Viga.Material.MaterialString;
-                    VigaSistema.Nome = Viga.Name;
-                    VigaSistema.Finish = Viga.Finish;
-                    VigaSistema.Class = Viga.Class;
-                    Ponto3D PontoInicial = new Ponto3D(Viga.StartPoint);
-                    Ponto3D PontoFinal = new Ponto3D(Viga.EndPoint);
-                    VigaSistema.PontoInicial = PontoInicial;
-                    VigaSistema.PontoFinal = PontoFinal;
+                    var VigaSistema = new VigaModelo(Viga);
                     ModeloCurso.ObjetosModelo.Add(VigaSistema);
+                    ModeloCurso.Salvar();
+
                 }
 
 
