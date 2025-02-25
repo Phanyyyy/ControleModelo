@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace ControleModelo.Classes
 {
@@ -17,11 +19,19 @@ namespace ControleModelo.Classes
         {
             XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { typeof(ControleModelo), typeof(VigaModelo) });
 
-            TextWriter writer = new StreamWriter("D:\\arquivoteste.MMD");
+            TextWriter writer = new StreamWriter("C:\\arquivoteste.MMD");
             serializer.Serialize(writer, this);
             writer.Close();
 
-    }
+        }
+        public static ControleModelo Carregar(string CaminhoArquivo)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { typeof(ControleModelo), typeof(VigaModelo) });
+            TextReader reader = new StreamReader(CaminhoArquivo);
+            ControleModelo ModeloCarregado = serializer.Deserialize(reader) as ControleModelo;
+            reader.Close();
+            return ModeloCarregado;
+        }
     }
     public class ObjetoModelo
     {
@@ -48,6 +58,16 @@ namespace ControleModelo.Classes
         public Ponto3D PontoInicial { get; set; }
         public Ponto3D PontoFinal { get; set; }
         public VigaModelo() { }
+        public VigaModelo(Tekla.Structures.Model.Beam vigaTekla)
+        {
+           Perfil = vigaTekla.Profile.ProfileString;
+           Material = vigaTekla.Material.MaterialString;
+           Nome = vigaTekla.Name;
+           Finish = vigaTekla.Finish;
+           Class = vigaTekla.Class;
+           PontoInicial = new Ponto3D(vigaTekla.StartPoint);
+           PontoFinal = new Ponto3D(vigaTekla.EndPoint);
+        }
     }
 
 }

@@ -30,12 +30,39 @@ namespace ControleModelo
                     var Viga = objeto as Tekla.Structures.Model.Beam;
                     var VigaSistema = new VigaModelo(Viga);
                     ModeloCurso.ObjetosModelo.Add(VigaSistema);
-                    ModeloCurso.Salvar();
+                  
 
                 }
 
 
             }
+            ModeloCurso.Salvar();
+            MessageBox.Show(ModeloCurso.ObjetosModelo.Count.ToString());
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var ModeloTekla = new Tekla.Structures.Model.Model();
+            var ModeloCurso = ControleModelo.Classes.ControleModelo.Carregar("C:\\arquivoteste.MMD");
+            foreach (var viga in ModeloCurso.ObjetosModelo)
+            {
+                if(viga is VigaModelo)
+                {
+                    var Vigamod = viga as VigaModelo;
+                    var VigaTekla = new Tekla.Structures.Model.Beam();
+                    VigaTekla.Profile.ProfileString = Vigamod.Perfil;
+                    VigaTekla.Material.MaterialString = Vigamod.Material;
+                    VigaTekla.Name = Vigamod.Nome;
+                    VigaTekla.Finish = Vigamod.Finish;
+                    VigaTekla.Class = Vigamod.Class;
+
+                    VigaTekla.StartPoint = new Tekla.Structures.Geometry3d.Point(Vigamod.PontoInicial.X, Vigamod.PontoInicial.Y, Vigamod.PontoInicial.Z);
+                    VigaTekla.EndPoint = new Tekla.Structures.Geometry3d.Point(Vigamod.PontoFinal.X, Vigamod.PontoFinal.Y, Vigamod.PontoFinal.Z);
+                    VigaTekla.Insert();
+
+                }
+            }
+            ModeloTekla.CommitChanges();
             MessageBox.Show(ModeloCurso.ObjetosModelo.Count.ToString());
         }
     }
