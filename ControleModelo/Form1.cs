@@ -66,14 +66,16 @@ namespace ControleModelo
             ModeloTekla.CommitChanges();
             MessageBox.Show(ModeloCurso.ObjetosModelo.Count.ToString());
         }
-        Tekla.Structures.Model.UI.ModelObjectSelector SelecionadorDeObjetos = new Tekla.Structures.Model.UI.ModelObjectSelector();
 
         private void button3_Click(object sender, EventArgs e)
         {
             var ObjetosModelo = SelecionadorDeObjetos.GetSelectedObjects();
             foreach (var Objeto in ObjetosModelo)
             {
-                MessageBox.Show(Objeto.GetType().ToString());
+                if (Objeto is Tekla.Structures.Model.Beam)
+                {
+                    var VigaTekla = Objeto as Tekla.Structures.Model.Beam;
+                }
             }
         }
     }
