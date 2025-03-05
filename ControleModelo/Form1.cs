@@ -83,8 +83,12 @@ namespace ControleModelo
                     //VigaTekla.Position.Rotation = Tekla.Structures.Model.Position.RotationEnum.FRONT;
                     //VigaTekla.Position.RotationOffset = 45;
 
-                    VigaTekla.Position.Depth = Tekla.Structures.Model.Position.DepthEnum.FRONT;
-                    VigaTekla.Position.DepthOffset = 100;
+                    //VigaTekla.Position.Depth = Tekla.Structures.Model.Position.DepthEnum.FRONT;
+                    //VigaTekla.Position.DepthOffset = 100;
+
+                    VigaTekla.StartPointOffset.Dx = 50;
+                    VigaTekla.EndPointOffset.Dx = -50;
+
                     VigaTekla.Modify();
                   
                 }
