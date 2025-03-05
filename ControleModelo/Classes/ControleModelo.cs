@@ -41,14 +41,6 @@ namespace ControleModelo.Classes
             ID = Guid.NewGuid();
         }
     }
-    public class PecaModelo : ObjetoModelo
-    {
-        public string Nome { get; set; }
-        public string Perfil { get; set; }
-        public string Material { get; set; }
-        public string Finish { get; set; }
-        public string Class { get; set; }
-        public PecaModelo() { }
 
 
     }
