@@ -13,6 +13,8 @@ namespace ControleModelo
 {
     public partial class Form1 : Form
     {
+        Tekla.Structures.Model.UI.ModelObjectSelector SelecionadorDeObjetos = new Tekla.Structures.Model.UI.ModelObjectSelector();
+        Tekla.Structures.Model.Model Modelo = new Tekla.Structures.Model.Model();
         public Form1()
         {
             InitializeComponent();
@@ -30,7 +32,6 @@ namespace ControleModelo
                     var Viga = objeto as Tekla.Structures.Model.Beam;
                     var VigaSistema = new VigaModelo(Viga);
                     ModeloCurso.ObjetosModelo.Add(VigaSistema);
-                  
 
                 }
 
@@ -66,8 +67,7 @@ namespace ControleModelo
             ModeloTekla.CommitChanges();
             MessageBox.Show(ModeloCurso.ObjetosModelo.Count.ToString());
         }
-        Tekla.Structures.Model.UI.ModelObjectSelector SelecionadorDeObjetos = new Tekla.Structures.Model.UI.ModelObjectSelector();
-
+        
         private void button3_Click(object sender, EventArgs e)
         {
             var ObjetosModelo = SelecionadorDeObjetos.GetSelectedObjects();
@@ -75,11 +75,26 @@ namespace ControleModelo
             {
                 if(Objeto is Tekla.Structures.Model.Beam)
                 {
-                    var VigaTekla = Objeto as Tekla.Structures.Model.Beam; 
+                    var VigaTekla = Objeto as Tekla.Structures.Model.Beam;
+                    //VigaTekla.Position.Plane = Tekla.Structures.Model.Position.PlaneEnum.LEFT;
+                    //VigaTekla.Position.PlaneOffset = 100.5;
 
-               
+                    //VigaTekla.Position.Rotation = Tekla.Structures.Model.Position.RotationEnum.FRONT;
+                    //VigaTekla.Position.RotationOffset = 45;         
+
+                    //VigaTekla.Position.Depth = Tekla.Structures.Model.Position.DepthEnum.FRONT;
+                    //VigaTekla.Position.DepthOffset = 100;
+
+                    VigaTekla.StartPointOffset.Dx = 50;
+                    VigaTekla.EndPointOffset.Dx = -50;
+
+                    VigaTekla.Modify();
+
+
+
                 }
             }
+            Modelo.CommitChanges();
         }
     }
 }

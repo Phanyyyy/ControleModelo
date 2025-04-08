@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ControleModelo.cs" />
+    <Compile Include="Classes\ControleModelo.Peca.cs" />
     <Compile Include="Classes\Geometria.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

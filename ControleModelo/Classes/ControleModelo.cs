@@ -41,25 +41,6 @@ namespace ControleModelo.Classes
             ID = Guid.NewGuid();
         }
     }
-
-
-    }
-
-    public class VigaModelo : PecaModelo
-    {
-        public Ponto3D PontoInicial { get; set; }
-        public Ponto3D PontoFinal { get; set; }
-        public VigaModelo() { }
-        public VigaModelo(Tekla.Structures.Model.Beam vigaTekla)
-        {
-           Perfil = vigaTekla.Profile.ProfileString;
-           Material = vigaTekla.Material.MaterialString;
-           Nome = vigaTekla.Name;
-           Finish = vigaTekla.Finish;
-           Class = vigaTekla.Class;
-           PontoInicial = new Ponto3D(vigaTekla.StartPoint);
-           PontoFinal = new Ponto3D(vigaTekla.EndPoint);
-        }
-    }
+   
 
 }
