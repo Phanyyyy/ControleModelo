@@ -73,7 +73,12 @@ namespace ControleModelo
             var ObjetosModelo = SelecionadorDeObjetos.GetSelectedObjects();
             foreach (var Objeto in ObjetosModelo)
             {
-                MessageBox.Show(Objeto.GetType().ToString());
+                if(Objeto is Tekla.Structures.Model.Beam)
+                {
+                    var VigaTekla = Objeto as Tekla.Structures.Model.Beam; 
+
+               
+                }
             }
         }
     }
