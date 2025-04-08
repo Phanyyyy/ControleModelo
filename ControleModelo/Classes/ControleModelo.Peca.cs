@@ -37,6 +37,7 @@ namespace ControleModelo.Classes
             Class = vigaTekla.Class;
             PontoInicial = new Ponto3D(vigaTekla.StartPoint);
             PontoFinal = new Ponto3D(vigaTekla.EndPoint);
+            NumeracaoPeca = new NumeracaoControleModelo(vigaTekla.PartNumber);
 
         }
     }
