@@ -27,6 +27,14 @@ namespace ControleModelo.Classes
     {
         public Ponto3D PontoInicial { get; set; }
         public Ponto3D PontoFinal { get; set; }
+        public ControleModeloPositionPlane PosicaoPlane { get; set; }
+        public ControleModeloPositionRotation PosicaoRotation { get; set; }
+        public ControleModeloPositionDepth PosicaoDepth { get; set; }
+        public double PosicaoPlaneOffset { get; set; }
+        public double PosicaoRotationOffset { get; set; }
+        public double PosicaoDepthOffset { get; set; }
+
+
         public VigaModelo() { }
         public VigaModelo(Tekla.Structures.Model.Beam vigaTekla)
         {
@@ -39,8 +47,40 @@ namespace ControleModelo.Classes
             PontoFinal = new Ponto3D(vigaTekla.EndPoint);
             NumeracaoPeca = new NumeracaoControleModelo(vigaTekla.PartNumber);
             NumeracaoConjunto = new NumeracaoControleModelo(vigaTekla.AssemblyNumber);
+            PosicaoPlaneOffset = vigaTekla.Position.PlaneOffset;
+            PosicaoRotationOffset = vigaTekla.Position.RotationOffset;
+            PosicaoDepthOffset = vigaTekla.Position.DepthOffset;
+            PosicaoPlane = Ferramentas.ConvertePositionPlane(vigaTekla.Position.Plane);
+            PosicaoRotation = Ferramentas.ConvertePositionRotation(vigaTekla.Position.Rotation);
+
+
+
+            
+            
 
         }
+    }
+    public enum ControleModeloPositionPlane
+    {
+        Middle,
+        Right,
+        Left
+
+    }
+    public enum ControleModeloPositionRotation
+    {
+        Front,
+        Top,
+        Back,
+        Below
+
+    }
+    public enum ControleModeloPositionDepth
+    {
+        Middle,
+        Front,
+        Behind
+
     }
     public class NumeracaoControleModelo
     {
