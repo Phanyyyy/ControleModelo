@@ -82,6 +82,19 @@ namespace ControleModelo.Classes
         Behind
 
     }
+    public class ControleModeloOffset
+    {
+        public double Dx { get; set; }
+        public double Dy { get; set; }
+        public double Dz {  get; set; }
+        public ControleModeloOffset() { }   
+        public ControleModeloOffset(Offset offsetTekla)
+        {
+            Dx = offsetTekla.Dx;
+            Dy = offsetTekla.Dy;
+            Dz = offsetTekla .Dz;
+
+        }
     public class NumeracaoControleModelo
     {
         public string Prefixo { get; set; }
