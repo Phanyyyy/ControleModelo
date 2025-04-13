@@ -33,6 +33,10 @@ namespace ControleModelo.Classes
             Z = pontoTekla.Z;
 
         }
+        public Tekla.Structures.Geometry3d.Point RetornaPontoTekla()
+        {
+            return new Tekla.Structures.Geometry3d.Point (X, Y, Z);
+        }
 
     }
 }

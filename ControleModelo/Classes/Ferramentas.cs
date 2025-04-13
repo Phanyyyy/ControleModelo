@@ -7,7 +7,7 @@ using Tekla.Structures.Model;
 
 namespace ControleModelo.Classes
 {
-    internal class Ferramentas
+    public class Ferramentas
     {
         public static ControleModeloPositionPlane ConvertePositionPlane(Position.PlaneEnum Opcao)
         {
@@ -20,6 +20,47 @@ namespace ControleModelo.Classes
                     return ControleModeloPositionPlane.Right;
                 default:
                     return ControleModeloPositionPlane.Left;
+            }
+        }
+        public static Position.PlaneEnum ConvertePositionPlaneTekla(ControleModeloPositionPlane Opcao)
+        {
+
+            switch (Opcao)
+            {
+                case ControleModeloPositionPlane.Middle:
+                    return Position.PlaneEnum.MIDDLE;
+                case ControleModeloPositionPlane.Right:
+                    return Position.PlaneEnum.RIGHT;
+                default:
+                    return Position.PlaneEnum.LEFT;
+            }
+        }
+        public static Position.RotationEnum ConvertePositionRotationTekla(ControleModeloPositionRotation Opcao)
+        {
+
+            switch (Opcao)
+            {
+                case ControleModeloPositionRotation.Top:
+                    return Position.RotationEnum.TOP;
+                case ControleModeloPositionRotation.Front:
+                    return Position.RotationEnum.FRONT;
+                case ControleModeloPositionRotation.Back:
+                    return Position.RotationEnum.BACK;
+                default:
+                    return Position.RotationEnum.BELOW;
+            }
+        }
+        public static Position.DepthEnum ConvertePositionDepthTekla(ControleModeloPositionDepth Opcao)
+        {
+
+            switch (Opcao)
+            {
+                case ControleModeloPositionDepth.Middle:
+                    return Position.DepthEnum.MIDDLE;
+                case ControleModeloPositionDepth.Front:
+                    return Position.DepthEnum.FRONT;
+                default:
+                    return Position.DepthEnum.BEHIND;
             }
         }
         public static ControleModeloPositionRotation ConvertePositionRotation(Position.RotationEnum Opcao)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Tekla.Structures.Model;
 
 namespace ControleModelo.Classes
@@ -15,7 +16,7 @@ namespace ControleModelo.Classes
         public string Material { get; set; }
         public string Finish { get; set; }
         public string Class { get; set; }
-        public NumeracaoControleModelo NumeracaoPeca {  get; set; }
+        public NumeracaoControleModelo NumeracaoPeca { get; set; }
         public NumeracaoControleModelo NumeracaoConjunto { get; set; }
 
         public PecaModelo() { }
@@ -33,6 +34,9 @@ namespace ControleModelo.Classes
         public double PosicaoPlaneOffset { get; set; }
         public double PosicaoRotationOffset { get; set; }
         public double PosicaoDepthOffset { get; set; }
+        public ControleModeloOffset PontoInicialOffset { get; set; }
+        public ControleModeloOffset PontoFinalOffset { get; set; }
+
 
 
         public VigaModelo() { }
@@ -52,12 +56,35 @@ namespace ControleModelo.Classes
             PosicaoDepthOffset = vigaTekla.Position.DepthOffset;
             PosicaoPlane = Ferramentas.ConvertePositionPlane(vigaTekla.Position.Plane);
             PosicaoRotation = Ferramentas.ConvertePositionRotation(vigaTekla.Position.Rotation);
+            PosicaoDepth = Ferramentas.ConvertePositionDepth(vigaTekla.Position.Depth);
+            PontoInicialOffset = new ControleModeloOffset(vigaTekla.StartPointOffset);
+            PontoFinalOffset = new ControleModeloOffset(vigaTekla.EndPointOffset);
 
 
 
-            
-            
 
+
+        }
+        public Tekla.Structures.Model.Beam RetornaVigaTekla()
+        {
+            var VigaTekla = new Tekla.Structures.Model.Beam();
+            VigaTekla.Name = Nome;
+            VigaTekla.Profile.ProfileString = Perfil;
+            VigaTekla.Material.MaterialString = Material;
+            VigaTekla.Finish = Finish;
+            VigaTekla.StartPoint = PontoInicial.RetornaPontoTekla();
+            VigaTekla.EndPoint = PontoFinal.RetornaPontoTekla();
+            VigaTekla.AssemblyNumber = NumeracaoConjunto.RetornaNumeracaoTekla();
+            VigaTekla.PartNumber = NumeracaoPeca.RetornaNumeracaoTekla();
+            VigaTekla.Position.PlaneOffset = PosicaoPlaneOffset;
+            VigaTekla.Position.RotationOffset = PosicaoRotationOffset;
+            VigaTekla.Position.DepthOffset = PosicaoDepthOffset;
+            VigaTekla.Position.Plane = Ferramentas.ConvertePositionPlaneTekla(PosicaoPlane);
+            VigaTekla.Position.Rotation = Ferramentas.ConvertePositionRotationTekla(PosicaoRotation);
+            VigaTekla.Position.Depth = Ferramentas.ConvertePositionDepthTekla(PosicaoDepth);
+            VigaTekla.StartPointOffset = PontoInicialOffset.RetornaOffsetTekla();
+            VigaTekla.EndPointOffset = PontoFinalOffset.RetornaOffsetTekla();
+            return VigaTekla;
         }
     }
     public enum ControleModeloPositionPlane
@@ -86,15 +113,24 @@ namespace ControleModelo.Classes
     {
         public double Dx { get; set; }
         public double Dy { get; set; }
-        public double Dz {  get; set; }
-        public ControleModeloOffset() { }   
+        public double Dz { get; set; }
+        public ControleModeloOffset() { }
         public ControleModeloOffset(Offset offsetTekla)
         {
             Dx = offsetTekla.Dx;
             Dy = offsetTekla.Dy;
-            Dz = offsetTekla .Dz;
+            Dz = offsetTekla.Dz;
 
         }
+        public Offset RetornaOffsetTekla()
+        {
+            var offset = new Offset();
+            offset.Dx = Dx;
+            offset.Dy = Dy;
+            offset.Dz = Dz;
+            return offset;
+        }
+    }
     public class NumeracaoControleModelo
     {
         public string Prefixo { get; set; }
@@ -116,6 +152,7 @@ namespace ControleModelo.Classes
         }
     }
 }
+    
 
 
 

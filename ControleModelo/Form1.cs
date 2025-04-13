@@ -23,8 +23,6 @@ namespace ControleModelo
         private void button1_Click(object sender, EventArgs e)
         {
             ControleModelo.Classes.ControleModelo ModeloCurso = new ControleModelo.Classes.ControleModelo();
-                
-            Tekla.Structures.Model.UI.ModelObjectSelector SelecionadorDeObjetos = new Tekla.Structures.Model.UI.ModelObjectSelector();
             foreach (var objeto in SelecionadorDeObjetos.GetSelectedObjects())
             {
                 if (objeto is Tekla.Structures.Model.Beam)
@@ -51,15 +49,7 @@ namespace ControleModelo
                 if(viga is VigaModelo)
                 {
                     var Vigamod = viga as VigaModelo;
-                    var VigaTekla = new Tekla.Structures.Model.Beam();
-                    VigaTekla.Profile.ProfileString = Vigamod.Perfil;
-                    VigaTekla.Material.MaterialString = Vigamod.Material;
-                    VigaTekla.Name = Vigamod.Nome;
-                    VigaTekla.Finish = Vigamod.Finish;
-                    VigaTekla.Class = Vigamod.Class;
-
-                    VigaTekla.StartPoint = new Tekla.Structures.Geometry3d.Point(Vigamod.PontoInicial.X, Vigamod.PontoInicial.Y, Vigamod.PontoInicial.Z);
-                    VigaTekla.EndPoint = new Tekla.Structures.Geometry3d.Point(Vigamod.PontoFinal.X, Vigamod.PontoFinal.Y, Vigamod.PontoFinal.Z);
+                    var VigaTekla = Vigamod.RetornaVigaTekla();
                     VigaTekla.Insert();
 
                 }
