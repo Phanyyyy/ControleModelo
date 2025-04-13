@@ -22,40 +22,58 @@ namespace ControleModelo
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ControleModelo.Classes.ControleModelo ModeloCurso = new ControleModelo.Classes.ControleModelo();
-            foreach (var objeto in SelecionadorDeObjetos.GetSelectedObjects())
+            SaveFileDialog ArquivoSalvar = new SaveFileDialog();
+            ArquivoSalvar.Filter = "Arquivo Controle Modelo | *.MMD";
+            if (ArquivoSalvar.ShowDialog()==DialogResult.OK)
             {
-                if (objeto is Tekla.Structures.Model.Beam)
-                {
-                    var Viga = objeto as Tekla.Structures.Model.Beam;
-                    var VigaSistema = new VigaModelo(Viga);
-                    ModeloCurso.ObjetosModelo.Add(VigaSistema);
 
+                ControleModelo.Classes.ControleModelo ModeloCurso = new ControleModelo.Classes.ControleModelo();
+                foreach (var objeto in SelecionadorDeObjetos.GetSelectedObjects())
+                {
+                    if (objeto is Tekla.Structures.Model.Beam)
+                    {
+                        var Viga = objeto as Tekla.Structures.Model.Beam;
+                        var VigaSistema = new VigaModelo(Viga);
+                        ModeloCurso.ObjetosModelo.Add(VigaSistema);
+
+                    }
                 }
 
-
+                ModeloCurso.Salvar(ArquivoSalvar.FileName);
+                MessageBox.Show("Arquivo salvo");
             }
-            ModeloCurso.Salvar();
-            MessageBox.Show(ModeloCurso.ObjetosModelo.Count.ToString());
+            else
+            {
+                MessageBox.Show("Nenhuma Opção Selecionada, o modelo não será salvo!");
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-
-            var ModeloTekla = new Tekla.Structures.Model.Model();
-            var ModeloCurso = ControleModelo.Classes.ControleModelo.Carregar("C:\\arquivoteste.MMD");
-            foreach (var viga in ModeloCurso.ObjetosModelo)
+            OpenFileDialog ArquivoAbrir = new OpenFileDialog();
+            ArquivoAbrir.Filter = "Arquivo Controle Modelo | *.MMD";
+            ArquivoAbrir.Multiselect = false;
+            if (ArquivoAbrir.ShowDialog() == DialogResult.OK)
             {
-                if(viga is VigaModelo)
-                {
-                    var Vigamod = viga as VigaModelo;
-                    var VigaTekla = Vigamod.RetornaVigaTekla();
-                    VigaTekla.Insert();
 
+                var ModeloCurso = ControleModelo.Classes.ControleModelo.Carregar(ArquivoAbrir.FileName);
+                foreach (var viga in ModeloCurso.ObjetosModelo)
+                {
+                    if (viga is VigaModelo)
+                    {
+                        var Vigamod = viga as VigaModelo;
+                        var VigaTekla = Vigamod.RetornaVigaTekla();
+                        VigaTekla.Insert();
+
+                    }
                 }
+                Modelo.CommitChanges();
+                MessageBox.Show(ModeloCurso.ObjetosModelo.Count.ToString());
             }
-            ModeloTekla.CommitChanges();
-            MessageBox.Show(ModeloCurso.ObjetosModelo.Count.ToString());
+            else
+            {
+                MessageBox.Show("Nenhum arquivo selecionado!");
+            }
         }
         
         private void button3_Click(object sender, EventArgs e)

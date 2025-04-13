@@ -15,11 +15,11 @@ namespace ControleModelo.Classes
         {
             ObjetosModelo = new List<ObjetoModelo>();
         }
-        public void Salvar()
+        public void Salvar(string CaminhoArquivo)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { typeof(ControleModelo), typeof(VigaModelo) });
 
-            TextWriter writer = new StreamWriter("C:\\arquivoteste.MMD");
+            TextWriter writer = new StreamWriter(CaminhoArquivo);
             serializer.Serialize(writer, this);
             writer.Close();
 
