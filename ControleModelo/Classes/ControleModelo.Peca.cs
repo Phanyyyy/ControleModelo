@@ -72,6 +72,7 @@ namespace ControleModelo.Classes
             VigaTekla.Profile.ProfileString = Perfil;
             VigaTekla.Material.MaterialString = Material;
             VigaTekla.Finish = Finish;
+            VigaTekla.Class = Class;
             VigaTekla.StartPoint = PontoInicial.RetornaPontoTekla();
             VigaTekla.EndPoint = PontoFinal.RetornaPontoTekla();
             VigaTekla.AssemblyNumber = NumeracaoConjunto.RetornaNumeracaoTekla();

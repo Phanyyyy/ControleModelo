@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ControleModelo.Classes;
+using Tekla.Structures.Model;
 
 namespace ControleModelo
 {
@@ -100,6 +101,16 @@ namespace ControleModelo
 
 
 
+                }
+                else if(Objeto is Tekla.Structures.Model.ContourPlate)
+                {
+                    var ChapaContorno = Objeto as Tekla.Structures.Model.ContourPlate;
+                    foreach(ContourPoint ponto in ChapaContorno.Contour.ContourPoints)
+                    {
+                        ponto.Chamfer.Type = Chamfer.ChamferTypeEnum.CHAMFER_ARC;
+                        ponto.Chamfer.X = 300;
+                    }
+                    ChapaContorno.Modify();
                 }
             }
             Modelo.CommitChanges();
