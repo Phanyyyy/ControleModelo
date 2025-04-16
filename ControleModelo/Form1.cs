@@ -115,5 +115,25 @@ namespace ControleModelo
             }
             Modelo.CommitChanges();
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //P1 = 0,0,0
+            //P2 = 1000,0,0
+            //P3 = 1000,1000,0
+            //P4 = 0,1000,0
+
+            var ChapaContorno = new ContourPlate();
+            ChapaContorno.Profile.ProfileString = "CH9.5";
+            ChapaContorno.Material.MaterialString = "A36";
+            ChapaContorno.Position.Depth = Position.DepthEnum.FRONT;
+
+            //ContourPoint = Geometry3d.Point + Chamfer
+
+            var Ponto1 = new ContourPoint();
+            Ponto1.Chamfer.Type = Chamfer.ChamferTypeEnum.CHAMFER_LINE;
+            Ponto1.Chamfer.X = 100;
+            Ponto1.Chamfer.Y = 100;
+        }
     }
 }
