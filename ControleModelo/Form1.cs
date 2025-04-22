@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -99,8 +99,6 @@ namespace ControleModelo
 
                     VigaTekla.Modify();
 
-
-
                 }
                 else if(Objeto is Tekla.Structures.Model.ContourPlate)
                 {
@@ -129,11 +127,40 @@ namespace ControleModelo
             ChapaContorno.Position.Depth = Position.DepthEnum.FRONT;
 
             //ContourPoint = Geometry3d.Point + Chamfer
-
+            //Ponto1
             var Ponto1 = new ContourPoint();
+            Ponto1.X = 0;
+            Ponto1.Y = 0;
+            Ponto1.Z = 0;
             Ponto1.Chamfer.Type = Chamfer.ChamferTypeEnum.CHAMFER_LINE;
             Ponto1.Chamfer.X = 100;
             Ponto1.Chamfer.Y = 100;
+            
+            //Ponto2
+            var Ponto2 = new ContourPoint();
+            Ponto2.X = 1000;
+
+            //Ponto3
+            var Ponto3Coordenada = new Tekla.Structures.Geometry3d.Point(1000, 1000, 0);
+            var Ponto3Chamfer = new Chamfer();
+            Ponto3Chamfer.Type = Chamfer.ChamferTypeEnum.CHAMFER_SQUARE;
+            Ponto3Chamfer.X = 400;
+            Ponto3Chamfer.Y = 100;
+            var Ponto3 = new ContourPoint(Ponto3Coordenada, Ponto3Chamfer);
+
+            //Ponto4
+            var Ponto4 = new ContourPoint(new Tekla.Structures.Geometry3d.Point(0, 1000, 0), new Chamfer());
+
+            ChapaContorno.Contour.AddContourPoint(Ponto1);
+            ChapaContorno.Contour.AddContourPoint(Ponto2);
+            ChapaContorno.Contour.AddContourPoint(Ponto3);
+            ChapaContorno.Contour.AddContourPoint(new Tekla.Structures.Geometry3d.Point(0,1000,0) as ContourPoint);
+            ChapaContorno.Insert();
+
+            Modelo.CommitChanges();
+
+
+
         }
     }
 }
