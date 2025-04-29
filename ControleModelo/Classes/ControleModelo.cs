@@ -17,7 +17,7 @@ namespace ControleModelo.Classes
         }
         public void Salvar(string CaminhoArquivo)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { typeof(ControleModelo), typeof(VigaModelo) });
+            XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { typeof(ControleModelo), typeof(VigaModelo), typeof(ChapaContornoModelo) });
 
             TextWriter writer = new StreamWriter(CaminhoArquivo);
             serializer.Serialize(writer, this);
@@ -26,7 +26,7 @@ namespace ControleModelo.Classes
         }
         public static ControleModelo Carregar(string CaminhoArquivo)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { typeof(ControleModelo), typeof(VigaModelo) });
+            XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { typeof(ControleModelo), typeof(VigaModelo), typeof(ChapaContornoModelo) });
             TextReader reader = new StreamReader(CaminhoArquivo);
             ControleModelo ModeloCarregado = serializer.Deserialize(reader) as ControleModelo;
             reader.Close();

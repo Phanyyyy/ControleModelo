@@ -23,6 +23,20 @@ namespace ControleModelo.Classes
 
 
     }
+    public class ChapaContornoModelo : PecaModelo
+    {
+        List<ContourPointModelo> ContornoControleModelo {  get; set; }
+        public ChapaContornoModelo ()
+        {
+            ContornoControleModelo = new List<ContourPointModelo>();
+        }
+
+    }
+
+    public class ContourPointModelo : Ponto3D
+    {
+        public ChamferControleModelo Chanfro { get; set; }
+    }
 
     public class VigaModelo : PecaModelo
     {
@@ -60,10 +74,6 @@ namespace ControleModelo.Classes
             PontoInicialOffset = new ControleModeloOffset(vigaTekla.StartPointOffset);
             PontoFinalOffset = new ControleModeloOffset(vigaTekla.EndPointOffset);
 
-
-
-
-
         }
         public Tekla.Structures.Model.Beam RetornaVigaTekla()
         {
@@ -87,6 +97,27 @@ namespace ControleModelo.Classes
             VigaTekla.EndPointOffset = PontoFinalOffset.RetornaOffsetTekla();
             return VigaTekla;
         }
+    }
+
+    public class ChamferControleModelo
+    {
+        public ChamferTypeControleModelo TipoChanfro { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double DZ1 { get; set; }
+        public double DZ2 { get; set; }
+
+    }
+    public enum ChamferTypeControleModelo
+    {
+        Line,
+        Rouding,
+        Arc,
+        Arcpoint,
+        Square,
+        Squareparallel,
+        Lineandarc,
+        None
     }
     public enum ControleModeloPositionPlane
     {

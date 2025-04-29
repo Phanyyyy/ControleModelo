@@ -103,11 +103,29 @@ namespace ControleModelo
                 else if(Objeto is Tekla.Structures.Model.ContourPlate)
                 {
                     var ChapaContorno = Objeto as Tekla.Structures.Model.ContourPlate;
-                    foreach(ContourPoint ponto in ChapaContorno.Contour.ContourPoints)
-                    {
-                        ponto.Chamfer.Type = Chamfer.ChamferTypeEnum.CHAMFER_ARC;
-                        ponto.Chamfer.X = 300;
-                    }
+
+                    ChapaContorno.Contour.ContourPoints.RemoveAt(5);
+                    //var PontoAdicionar = new ContourPoint();
+                    //PontoAdicionar.X = 2324.8;
+                    //PontoAdicionar.Y = 3626.1;
+
+                    //ChapaContorno.Contour.ContourPoints.Insert(5, PontoAdicionar);
+
+                    //int contador = 0;
+                    //foreach(ContourPoint ponto in ChapaContorno.Contour.ContourPoints)
+                    //{
+                    //    var vigaRef = new Beam();
+                    //    vigaRef.Profile.ProfileString = "D10";
+                    //    vigaRef.Material.MaterialString = "A36";
+                    //    vigaRef.StartPoint = new Tekla.Structures.Geometry3d.Point(ponto);
+                    //    vigaRef.EndPoint = new Tekla.Structures.Geometry3d.Point(ponto);
+                    //    vigaRef.EndPoint.Z += 100;
+                    //    vigaRef.Name = contador.ToString();
+                    //    vigaRef.Class = contador.ToString();
+                    //    vigaRef.Insert();
+
+                    //    contador++;
+                    //}
                     ChapaContorno.Modify();
                 }
             }
