@@ -36,6 +36,10 @@ namespace ControleModelo.Classes
     public class ContourPointModelo : Ponto3D
     {
         public ChamferControleModelo Chanfro { get; set; }
+        public ContourPointModelo () 
+        {
+
+        }
     }
 
     public class VigaModelo : PecaModelo
