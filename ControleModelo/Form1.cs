@@ -38,6 +38,12 @@ namespace ControleModelo
                         ModeloCurso.ObjetosModelo.Add(VigaSistema);
 
                     }
+                    if (objeto is Tekla.Structures.Model.ContourPlate)
+                    {
+                        var ChapaContorno = objeto as Tekla.Structures.Model.ContourPlate;
+                        var ChapaContornoSistema = new ChapaContornoModelo(ChapaContorno);
+                        ModeloCurso.ObjetosModelo.Add(ChapaContornoSistema);
+                    }
                 }
 
                 ModeloCurso.Salvar(ArquivoSalvar.FileName);
@@ -58,14 +64,20 @@ namespace ControleModelo
             {
 
                 var ModeloCurso = ControleModelo.Classes.ControleModelo.Carregar(ArquivoAbrir.FileName);
-                foreach (var viga in ModeloCurso.ObjetosModelo)
+                foreach (var ObjetoMod in ModeloCurso.ObjetosModelo)
                 {
-                    if (viga is VigaModelo)
+                    if (ObjetoMod is VigaModelo)
                     {
-                        var Vigamod = viga as VigaModelo;
+                        var Vigamod = ObjetoMod as VigaModelo;
                         var VigaTekla = Vigamod.RetornaVigaTekla();
                         VigaTekla.Insert();
-
+                    }
+                    else if (ObjetoMod is ChapaContornoModelo)
+                    {
+                        var CCMod = ObjetoMod as ChapaContornoModelo;
+                        var ChapaTekla = CCMod.RetornaContourPlateTekla();
+                        ChapaTekla.Insert();
+                        ChapaTekla.Modify();
                     }
                 }
                 Modelo.CommitChanges();

@@ -25,11 +25,48 @@ namespace ControleModelo.Classes
     }
     public class ChapaContornoModelo : PecaModelo
     {
-        List<ContourPointModelo> ContornoControleModelo {  get; set; }
+        public List<ContourPointModelo> ContornoControleModelo {  get; set; }
+        public ControleModeloPositionDepth PosicaoDepth { get; set; }
+        public double PosicaoDepthOffset { get; set; }
         public ChapaContornoModelo ()
         {
             ContornoControleModelo = new List<ContourPointModelo>();
         }
+        public ChapaContornoModelo(ContourPlate ChapaContornoTekla)
+        {
+            Nome = ChapaContornoTekla.Name;
+            Perfil = ChapaContornoTekla.Profile.ProfileString;
+            Finish = ChapaContornoTekla.Finish;
+            Class = ChapaContornoTekla.Class;
+            NumeracaoPeca = new NumeracaoControleModelo(ChapaContornoTekla.PartNumber);
+            NumeracaoConjunto = new NumeracaoControleModelo(ChapaContornoTekla.AssemblyNumber);
+            PosicaoDepth = Ferramentas.ConvertePositionDepth(ChapaContornoTekla.Position.Depth);
+            PosicaoDepthOffset = ChapaContornoTekla.Position.DepthOffset;
+            ContornoControleModelo = new List<ContourPointModelo>();
+            foreach(ContourPoint Ponto in ChapaContornoTekla.Contour.ContourPoints)
+            {
+                ContornoControleModelo.Add(new ContourPointModelo(Ponto));
+            }
+
+        }
+        public ContourPlate RetornaContourPlateTekla()
+        {
+            var CP = new ContourPlate();
+            CP.Name = Nome;
+            CP.Profile.ProfileString = Perfil;
+            CP.Finish = Finish;
+            CP.Class = Class;
+            CP.AssemblyNumber = NumeracaoConjunto.RetornaNumeracaoTekla();
+            CP.PartNumber = NumeracaoPeca.RetornaNumeracaoTekla();
+            CP.Position.DepthOffset = PosicaoDepthOffset;
+            CP.Position.Depth = Ferramentas.ConvertePositionDepthTekla(PosicaoDepth);
+            foreach (var Ponto in ContornoControleModelo)
+            {
+                CP.Contour.ContourPoints.Add(Ponto.RetornaContourPointTekla());
+            }
+            return CP;
+        }
+
 
     }
 
@@ -39,6 +76,23 @@ namespace ControleModelo.Classes
         public ContourPointModelo () 
         {
 
+        }
+        public ContourPointModelo(ContourPoint ContourPointTekla)
+        {
+            X = ContourPointTekla.X;
+            Y = ContourPointTekla.Y;
+            Z = ContourPointTekla.Z;
+
+            Chanfro = new ChamferControleModelo(ContourPointTekla.Chamfer);
+        }
+        public ContourPoint RetornaContourPointTekla()
+        {
+            var CP = new ContourPoint();
+            CP.X = X;
+            CP.Y = Y;
+            CP.Z = Z;
+            CP.Chamfer = Chanfro.RetornaChamferTekla();
+            return CP;
         }
     }
 
@@ -110,18 +164,46 @@ namespace ControleModelo.Classes
         public double Y { get; set; }
         public double DZ1 { get; set; }
         public double DZ2 { get; set; }
+        public ChamferControleModelo()
+        {
+           
+          
+        }
+        public ChamferControleModelo(Chamfer ChamferTekla)
+        {
+            X = ChamferTekla.X;
+            Y = ChamferTekla.Y;
+            DZ1 = ChamferTekla.DZ1;
+            DZ2 = ChamferTekla.DZ2;
+            var EnumRef = ChamferTypeControleModelo.CHAMFER_NONE;
+            Enum.TryParse<ChamferTypeControleModelo>(ChamferTekla.Type.ToString(), out EnumRef);
+            TipoChanfro = EnumRef;
+        }
+
+        public Chamfer RetornaChamferTekla()
+        {
+            var cf = new Chamfer();
+            cf.X = X;
+            cf.Y = Y;
+            cf.DZ1 = DZ1;
+            cf.DZ2 = DZ2;
+            var EnumRef = Chamfer.ChamferTypeEnum.CHAMFER_NONE;
+            Enum.TryParse<Chamfer.ChamferTypeEnum>(TipoChanfro.ToString(), out EnumRef);
+            cf.Type = EnumRef;
+            return cf;
+        }
 
     }
     public enum ChamferTypeControleModelo
     {
-        Line,
-        Rouding,
-        Arc,
-        Arcpoint,
-        Square,
-        Squareparallel,
-        Lineandarc,
-        None
+        CHAMFER_ARC,
+        CHAMFER_SQUARE_PARALLEL,
+        CHAMFER_LINE_AND_ARC,
+        CHAMFER_ARC_POINT,
+        CHAMFER_NONE,
+        CHAMFER_LINE,
+        CHAMFER_SQUARE,
+        CHAMFER_ROUNDING
     }
     public enum ControleModeloPositionPlane
     {
