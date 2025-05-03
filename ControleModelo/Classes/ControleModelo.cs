@@ -17,12 +17,14 @@ namespace ControleModelo.Classes
         }
         public void Salvar(string CaminhoArquivo)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { typeof(ControleModelo), typeof(VigaModelo), typeof(ChapaContornoModelo) });
-
+            XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] {
+                typeof(ControleModelo),
+                typeof(VigaModelo),
+                typeof(ChapaContornoModelo),
+                typeof(PolyBeamModelo) });
             TextWriter writer = new StreamWriter(CaminhoArquivo);
             serializer.Serialize(writer, this);
             writer.Close();
-
         }
         public static ControleModelo Carregar(string CaminhoArquivo)
         {

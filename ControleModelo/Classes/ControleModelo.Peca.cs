@@ -23,6 +23,63 @@ namespace ControleModelo.Classes
 
 
     }
+    public class PolyBeamModelo : PecaModelo
+    {
+        public List<ContourPointModelo> ContornoControleModelo { get; set; }
+        public ControleModeloPositionPlane PosicaoPlane { get; set; }
+        public ControleModeloPositionRotation PosicaoRotation { get; set; }
+        public ControleModeloPositionDepth PosicaoDepth { get; set; }
+        public double PosicaoPlaneOffset { get; set; }
+        public double PosicaoRotationOffset { get; set; }
+        public double PosicaoDepthOffset { get; set; }
+        public PolyBeamModelo()
+        {
+            ContornoControleModelo = new List<ContourPointModelo>();
+        }
+        public PolyBeamModelo(PolyBeam PolyBeamTekla)
+        {
+            Nome = PolyBeamTekla.Name;
+            Perfil = PolyBeamTekla.Profile.ProfileString;
+            Material = PolyBeamTekla.Material.MaterialString;
+            Finish = PolyBeamTekla.Finish;
+            Class = PolyBeamTekla.Class;
+            NumeracaoPeca = new NumeracaoControleModelo(PolyBeamTekla.PartNumber);
+            NumeracaoConjunto = new NumeracaoControleModelo(PolyBeamTekla.AssemblyNumber);
+            PosicaoPlaneOffset = PolyBeamTekla.Position.PlaneOffset;
+            PosicaoRotationOffset = PolyBeamTekla.Position.RotationOffset;
+            PosicaoDepthOffset = PolyBeamTekla.Position.DepthOffset;
+            PosicaoPlane = Ferramentas.ConvertePositionPlane(PolyBeamTekla.Position.Plane);
+            PosicaoRotation = Ferramentas.ConvertePositionRotation(PolyBeamTekla.Position.Rotation);
+            PosicaoDepth = Ferramentas.ConvertePositionDepth(PolyBeamTekla.Position.Depth);
+            ContornoControleModelo = new List<ContourPointModelo>();
+            foreach (ContourPoint Ponto in PolyBeamTekla.Contour.ContourPoints)
+            {
+                ContornoControleModelo.Add(new ContourPointModelo(Ponto));
+            }
+        }
+        public PolyBeam RetornaPolyBeamTekla()
+        {
+            var PB = new PolyBeam();
+            PB.Name = Nome;
+            PB.Profile.ProfileString = Perfil;
+            PB.Finish = Finish;
+            PB.Class = Class;
+            PB.AssemblyNumber = NumeracaoConjunto.RetornaNumeracaoTekla();
+            PB.Position.PlaneOffset = PosicaoPlaneOffset;
+            PB.Position.RotationOffset = PosicaoRotationOffset;
+            PB.Position.DepthOffset = PosicaoDepthOffset;
+            PB.Position.Plane = Ferramentas.ConvertePositionPlaneTekla(PosicaoPlane);
+            PB.Position.Rotation = Ferramentas.ConvertePositionRotationTekla(PosicaoRotation);
+            PB.Position.Depth = Ferramentas.ConvertePositionDepthTekla(PosicaoDepth);
+            
+         
+            foreach (var Ponto in ContornoControleModelo)
+            {
+                PB.Contour.ContourPoints.Add(Ponto.RetornaContourPointTekla());
+            }
+            return PB;
+        }
+    }
     public class ChapaContornoModelo : PecaModelo
     {
         public List<ContourPointModelo> ContornoControleModelo {  get; set; }

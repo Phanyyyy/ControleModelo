@@ -38,11 +38,17 @@ namespace ControleModelo
                         ModeloCurso.ObjetosModelo.Add(VigaSistema);
 
                     }
-                    if (objeto is Tekla.Structures.Model.ContourPlate)
+                    else if (objeto is Tekla.Structures.Model.ContourPlate)
                     {
                         var ChapaContorno = objeto as Tekla.Structures.Model.ContourPlate;
                         var ChapaContornoSistema = new ChapaContornoModelo(ChapaContorno);
                         ModeloCurso.ObjetosModelo.Add(ChapaContornoSistema);
+                    }
+                    else if (objeto is Tekla.Structures.Model.PolyBeam)
+                    {
+                        var PB = objeto as Tekla.Structures.Model.PolyBeam;
+                        var PolyBeamSistema = new PolyBeamModelo(PB);
+                        ModeloCurso.ObjetosModelo.Add(PolyBeamSistema);
                     }
                 }
 
@@ -78,6 +84,12 @@ namespace ControleModelo
                         var ChapaTekla = CCMod.RetornaContourPlateTekla();
                         ChapaTekla.Insert();
                         ChapaTekla.Modify();
+                    }
+                    else if (ObjetoMod is PolyBeamModelo)
+                    {
+                        var PBMod = ObjetoMod as PolyBeamModelo;
+                        var PolyBeamTekla = PBMod.RetornaPolyBeamTekla();
+                        PolyBeamTekla.Insert();
                     }
                 }
                 Modelo.CommitChanges();
@@ -140,6 +152,14 @@ namespace ControleModelo
                     //}
                     ChapaContorno.Modify();
                 }
+                else if (Objeto is Tekla.Structures.Model.PolyBeam)
+                {
+                    var PolyB = Objeto as Tekla.Structures.Model.PolyBeam;
+                    foreach(ContourPoint ponto in PolyB.Contour.ContourPoints)
+                    {
+                        MessageBox.Show(ponto.ToString()+"/n" + ponto.Chamfer.Type.ToString());
+                    }
+                }
             }
             Modelo.CommitChanges();
         }
@@ -151,10 +171,10 @@ namespace ControleModelo
             //P3 = 1000,1000,0
             //P4 = 0,1000,0
 
-            var ChapaContorno = new ContourPlate();
-            ChapaContorno.Profile.ProfileString = "CH9.5";
-            ChapaContorno.Material.MaterialString = "A36";
-            ChapaContorno.Position.Depth = Position.DepthEnum.FRONT;
+            var PolyViga = new PolyBeam();
+            PolyViga.Profile.ProfileString = "CH.9";
+            PolyViga.Material.MaterialString = "A36";
+            PolyViga.Position.Depth = Position.DepthEnum.FRONT;
 
             //ContourPoint = Geometry3d.Point + Chamfer
             //Ponto1
@@ -181,15 +201,20 @@ namespace ControleModelo
             //Ponto4
             var Ponto4 = new ContourPoint(new Tekla.Structures.Geometry3d.Point(0, 1000, 0), new Chamfer());
 
-            ChapaContorno.Contour.AddContourPoint(Ponto1);
-            ChapaContorno.Contour.AddContourPoint(Ponto2);
-            ChapaContorno.Contour.AddContourPoint(Ponto3);
-            ChapaContorno.Contour.AddContourPoint(new Tekla.Structures.Geometry3d.Point(0,1000,0) as ContourPoint);
-            ChapaContorno.Insert();
+            PolyViga.Contour.AddContourPoint(Ponto1);
+            PolyViga.Contour.AddContourPoint(Ponto2);
+            PolyViga.Contour.AddContourPoint(Ponto3);
+            PolyViga.Contour.AddContourPoint(new Tekla.Structures.Geometry3d.Point(0,1000,0) as ContourPoint);
+            PolyViga.Insert();
 
             Modelo.CommitChanges();
 
 
+
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
 
         }
     }
