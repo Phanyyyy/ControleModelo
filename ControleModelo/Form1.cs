@@ -217,5 +217,16 @@ namespace ControleModelo
         {
 
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            List<ContourPlate> Chapas = new List<ContourPlate>();
+            foreach(ContourPlate chapa in SelecionadorDeObjetos.GetSelectedObjects())
+            {
+                Chapas.Add(chapa);
+            }
+            var BentPlate = Tekla.Structures.Model.Operations.Operation.CreateBentPlateByParts(Chapas[0], Chapas[1]);
+            Modelo.CommitChanges();
+        }
     }
 }
