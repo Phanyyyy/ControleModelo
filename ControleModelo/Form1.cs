@@ -160,6 +160,23 @@ namespace ControleModelo
                         MessageBox.Show(ponto.ToString()+"/n" + ponto.Chamfer.Type.ToString());
                     }
                 }
+                else if (Objeto is Tekla.Structures.Model.BentPlate)
+                {
+                    var BentP = Objeto as BentPlate;
+                    var Poligonos = BentP.Geometry.GetGeometryLegSections();
+                    var Chapa1 = new ContourPlate();
+
+                    Chapa1.Name = BentP.Name;
+                    Chapa1.Profile = BentP.Profile;
+                    Chapa1.Material = BentP.Material;
+                    Chapa1.Finish = BentP.Finish;
+
+                if (Poligonos[0].GeometryNode is PolygonNode)
+                {
+                    var ContornoChapa1 = Poligonos[0].GeometryNode as PolygonNode;
+        
+                }
+            }
             }
             Modelo.CommitChanges();
         }
