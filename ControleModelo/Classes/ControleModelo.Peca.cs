@@ -23,6 +23,79 @@ namespace ControleModelo.Classes
 
 
     }
+    public class BentPlateModelo : PecaModelo
+    {
+        public List<ContourPointModelo> ContornoChapa1 { get; set; }
+        public List<ContourPointModelo> ContornoChapa2 { get; set; }
+
+        public BentPlateModelo()
+        {
+            ContornoChapa1 = new List<ContourPointModelo>();
+            ContornoChapa2 = new List<ContourPointModelo>();
+        }
+        public BentPlateModelo(Tekla.Structures.Model.BentPlate bentPlate)
+        {
+            Nome = bentPlate.Name;
+            Perfil = bentPlate.Profile.ProfileString;
+            Material = bentPlate.Material.MaterialString;
+            Class = bentPlate.Class;
+            Finish = bentPlate.Finish;
+            NumeracaoPeca = new NumeracaoControleModelo(bentPlate.PartNumber);
+            NumeracaoConjunto = new NumeracaoControleModelo(bentPlate.AssemblyNumber);
+            ContornoChapa1 = new List<ContourPointModelo>();
+            ContornoChapa2 = new List<ContourPointModelo>();
+
+            var Poligonos = bentPlate.Geometry.GetGeometryLegSections();
+            if (Poligonos[0].GeometryNode is PolygonNode)
+            {
+                var ContornoChapa = Poligonos[0].GeometryNode as PolygonNode;
+                foreach(ContourPoint ponto in ContornoChapa.Contour.ContourPoints)
+                {
+                    ContornoChapa1.Add(new ContourPointModelo(ponto));
+                }
+            }
+            if (Poligonos[1].GeometryNode is PolygonNode)
+            {
+                var ContornoChapa = Poligonos[1].GeometryNode as PolygonNode;
+                foreach (ContourPoint ponto in ContornoChapa.Contour.ContourPoints)
+                {
+                    ContornoChapa2.Add(new ContourPointModelo(ponto));
+                }
+            }
+
+        }
+        public Tekla.Structures.Model.BentPlate CriarBentPlateNoTekla()
+        {
+            var ChapaContorno1 = new ContourPlate();
+            var ChapaContorno2 = new ContourPlate();
+
+            ChapaContorno1.Name = ChapaContorno2.Name;
+            ChapaContorno1.Profile.ProfileString = ChapaContorno2.Profile.ProfileString = Perfil;
+            ChapaContorno1.Material.MaterialString = ChapaContorno2.Material.MaterialString = Material;
+            ChapaContorno1.Finish = ChapaContorno2.Finish = Finish;
+            ChapaContorno1.Class = ChapaContorno2.Class = Class;
+
+            ChapaContorno1.PartNumber = ChapaContorno2.PartNumber = NumeracaoPeca.RetornaNumeracaoTekla();
+            ChapaContorno1.AssemblyNumber = ChapaContorno2.AssemblyNumber = NumeracaoConjunto.RetornaNumeracaoTekla();
+
+            foreach(ContourPointModelo ponto in ContornoChapa1)
+            {
+                ChapaContorno1.Contour.ContourPoints.Add(ponto.RetornaContourPointTekla());
+
+            }
+            foreach (ContourPointModelo ponto in ContornoChapa1)
+            {
+                ChapaContorno2.Contour.ContourPoints.Add(ponto.RetornaContourPointTekla());
+
+            }
+            ChapaContorno1.Insert();
+            ChapaContorno2.Insert();
+
+            var BentPlateRetornar = Tekla.Structures.Model.Operations.Operation.CreateBentPlateByParts(ChapaContorno1, ChapaContorno2);
+            return BentPlateRetornar;
+
+        }
+    }
     public class PolyBeamModelo : PecaModelo
     {
         public List<ContourPointModelo> ContornoControleModelo { get; set; }

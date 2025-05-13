@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ControleModelo.Classes;
 using Tekla.Structures.Model;
+using Tekla.Structures.ModelInternal;
 
 namespace ControleModelo
 {
@@ -50,6 +51,12 @@ namespace ControleModelo
                         var PolyBeamSistema = new PolyBeamModelo(PB);
                         ModeloCurso.ObjetosModelo.Add(PolyBeamSistema);
                     }
+                    else if (objeto is Tekla.Structures.Model.BentPlate)
+                    {
+                        var BP = objeto as Tekla.Structures.Model.BentPlate;
+                        var BentPlateSistema = new BentPlateModelo(BP);
+                        ModeloCurso.ObjetosModelo.Add(BentPlateSistema);
+                    }
                 }
 
                 ModeloCurso.Salvar(ArquivoSalvar.FileName);
@@ -90,6 +97,12 @@ namespace ControleModelo
                         var PBMod = ObjetoMod as PolyBeamModelo;
                         var PolyBeamTekla = PBMod.RetornaPolyBeamTekla();
                         PolyBeamTekla.Insert();
+                    }
+                    else if (ObjetoMod is BentPlateModelo)
+                    {
+                        var BPMod = ObjetoMod as BentPlateModelo;
+                        var BentPlateTekla = BPMod.CriarBentPlateNoTekla();
+
                     }
                 }
                 Modelo.CommitChanges();
@@ -165,18 +178,36 @@ namespace ControleModelo
                     var BentP = Objeto as BentPlate;
                     var Poligonos = BentP.Geometry.GetGeometryLegSections();
                     var Chapa1 = new ContourPlate();
+                    var Chapa2 = new ContourPlate();
 
-                    Chapa1.Name = BentP.Name;
-                    Chapa1.Profile = BentP.Profile;
-                    Chapa1.Material = BentP.Material;
-                    Chapa1.Finish = BentP.Finish;
+                    Chapa1.Name = Chapa2.Name = BentP.Name;
+                    Chapa1.Profile = Chapa2.Profile = BentP.Profile;
+                    Chapa1.Material = Chapa2.Material = BentP.Material;
+                    Chapa1.Finish = Chapa2.Finish = BentP.Finish;
+                    Chapa1.Class = Chapa2.Class = BentP.Class;
+                    Chapa1.PartNumber = Chapa2.PartNumber = BentP.PartNumber;
+                    Chapa1.AssemblyNumber = Chapa2.AssemblyNumber = BentP.AssemblyNumber;
 
                 if (Poligonos[0].GeometryNode is PolygonNode)
                 {
                     var ContornoChapa1 = Poligonos[0].GeometryNode as PolygonNode;
+                    foreach (ContourPoint ponto in ContornoChapa1.Contour.ContourPoints)
+                        {
+                            Chapa1.Contour.ContourPoints.Add(ponto);
+                        }
         
                 }
-            }
+                    Chapa1.Insert();
+                    if (Poligonos[1].GeometryNode is PolygonNode)
+                    {
+                        var ContornoChapa2 = Poligonos[1].GeometryNode as PolygonNode;
+                        foreach(ContourPoint ponto in ContornoChapa2.Contour.ContourPoints)
+                        {
+                            Chapa2.Contour.ContourPoints.Add(ponto);
+                        }
+                    }
+                    Chapa2.Insert();
+                }
             }
             Modelo.CommitChanges();
         }

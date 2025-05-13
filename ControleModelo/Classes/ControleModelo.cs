@@ -21,14 +21,22 @@ namespace ControleModelo.Classes
                 typeof(ControleModelo),
                 typeof(VigaModelo),
                 typeof(ChapaContornoModelo),
-                typeof(PolyBeamModelo) });
+                typeof(PolyBeamModelo),
+                typeof(BentPlateModelo),
+            });
             TextWriter writer = new StreamWriter(CaminhoArquivo);
             serializer.Serialize(writer, this);
             writer.Close();
         }
         public static ControleModelo Carregar(string CaminhoArquivo)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { typeof(ControleModelo), typeof(VigaModelo), typeof(ChapaContornoModelo) });
+            XmlSerializer serializer = new XmlSerializer(typeof(ControleModelo), new Type[] { 
+                typeof(ControleModelo),
+                typeof(VigaModelo),
+                typeof(ChapaContornoModelo),
+                typeof(PolyBeamModelo),
+                typeof(BentPlateModelo),
+            });
             TextReader reader = new StreamReader(CaminhoArquivo);
             ControleModelo ModeloCarregado = serializer.Deserialize(reader) as ControleModelo;
             reader.Close();
