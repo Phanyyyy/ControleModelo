@@ -26,7 +26,7 @@ namespace ControleModelo
         {
             SaveFileDialog ArquivoSalvar = new SaveFileDialog();
             ArquivoSalvar.Filter = "Arquivo Controle Modelo | *.MMD";
-            if (ArquivoSalvar.ShowDialog()==DialogResult.OK)
+            if (ArquivoSalvar.ShowDialog() == DialogResult.OK)
             {
 
                 ControleModelo.Classes.ControleModelo ModeloCurso = new ControleModelo.Classes.ControleModelo();
@@ -113,13 +113,13 @@ namespace ControleModelo
                 MessageBox.Show("Nenhum arquivo selecionado!");
             }
         }
-        
+
         private void button3_Click(object sender, EventArgs e)
         {
             var ObjetosModelo = SelecionadorDeObjetos.GetSelectedObjects();
             foreach (var Objeto in ObjetosModelo)
             {
-                if(Objeto is Tekla.Structures.Model.Beam)
+                if (Objeto is Tekla.Structures.Model.Beam)
                 {
                     var VigaTekla = Objeto as Tekla.Structures.Model.Beam;
                     //VigaTekla.Position.Plane = Tekla.Structures.Model.Position.PlaneEnum.LEFT;
@@ -137,7 +137,7 @@ namespace ControleModelo
                     VigaTekla.Modify();
 
                 }
-                else if(Objeto is Tekla.Structures.Model.ContourPlate)
+                else if (Objeto is Tekla.Structures.Model.ContourPlate)
                 {
                     var ChapaContorno = Objeto as Tekla.Structures.Model.ContourPlate;
 
@@ -168,9 +168,9 @@ namespace ControleModelo
                 else if (Objeto is Tekla.Structures.Model.PolyBeam)
                 {
                     var PolyB = Objeto as Tekla.Structures.Model.PolyBeam;
-                    foreach(ContourPoint ponto in PolyB.Contour.ContourPoints)
+                    foreach (ContourPoint ponto in PolyB.Contour.ContourPoints)
                     {
-                        MessageBox.Show(ponto.ToString()+"/n" + ponto.Chamfer.Type.ToString());
+                        MessageBox.Show(ponto.ToString() + "/n" + ponto.Chamfer.Type.ToString());
                     }
                 }
                 else if (Objeto is Tekla.Structures.Model.BentPlate)
@@ -188,20 +188,20 @@ namespace ControleModelo
                     Chapa1.PartNumber = Chapa2.PartNumber = BentP.PartNumber;
                     Chapa1.AssemblyNumber = Chapa2.AssemblyNumber = BentP.AssemblyNumber;
 
-                if (Poligonos[0].GeometryNode is PolygonNode)
-                {
-                    var ContornoChapa1 = Poligonos[0].GeometryNode as PolygonNode;
-                    foreach (ContourPoint ponto in ContornoChapa1.Contour.ContourPoints)
+                    if (Poligonos[0].GeometryNode is PolygonNode)
+                    {
+                        var ContornoChapa1 = Poligonos[0].GeometryNode as PolygonNode;
+                        foreach (ContourPoint ponto in ContornoChapa1.Contour.ContourPoints)
                         {
                             Chapa1.Contour.ContourPoints.Add(ponto);
                         }
-        
-                }
+
+                    }
                     Chapa1.Insert();
                     if (Poligonos[1].GeometryNode is PolygonNode)
                     {
                         var ContornoChapa2 = Poligonos[1].GeometryNode as PolygonNode;
-                        foreach(ContourPoint ponto in ContornoChapa2.Contour.ContourPoints)
+                        foreach (ContourPoint ponto in ContornoChapa2.Contour.ContourPoints)
                         {
                             Chapa2.Contour.ContourPoints.Add(ponto);
                         }
@@ -233,7 +233,7 @@ namespace ControleModelo
             Ponto1.Chamfer.Type = Chamfer.ChamferTypeEnum.CHAMFER_LINE;
             Ponto1.Chamfer.X = 100;
             Ponto1.Chamfer.Y = 100;
-            
+
             //Ponto2
             var Ponto2 = new ContourPoint();
             Ponto2.X = 1000;
@@ -252,7 +252,7 @@ namespace ControleModelo
             PolyViga.Contour.AddContourPoint(Ponto1);
             PolyViga.Contour.AddContourPoint(Ponto2);
             PolyViga.Contour.AddContourPoint(Ponto3);
-            PolyViga.Contour.AddContourPoint(new Tekla.Structures.Geometry3d.Point(0,1000,0) as ContourPoint);
+            PolyViga.Contour.AddContourPoint(new Tekla.Structures.Geometry3d.Point(0, 1000, 0) as ContourPoint);
             PolyViga.Insert();
 
             Modelo.CommitChanges();
@@ -269,11 +269,38 @@ namespace ControleModelo
         private void button5_Click(object sender, EventArgs e)
         {
             List<ContourPlate> Chapas = new List<ContourPlate>();
-            foreach(ContourPlate chapa in SelecionadorDeObjetos.GetSelectedObjects())
+            foreach (ContourPlate chapa in SelecionadorDeObjetos.GetSelectedObjects())
             {
                 Chapas.Add(chapa);
             }
             var BentPlate = Tekla.Structures.Model.Operations.Operation.CreateBentPlateByParts(Chapas[0], Chapas[1]);
+            Modelo.CommitChanges();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            foreach (var ObjetoModelo in SelecionadorDeObjetos.GetSelectedObjects())
+            {
+                if (ObjetoModelo is Tekla.Structures.Model.Part)
+                {
+                    var Peca = ObjetoModelo as Tekla.Structures.Model.Part;
+                    
+                    var Fit = new Tekla.Structures.Model.Fitting();
+
+                    Fit.Father = Peca;
+
+                    var PlanodeCorte = new Tekla.Structures.Model.Plane();
+                    PlanodeCorte.Origin = new Tekla.Structures.Geometry3d.Point(0, 0, 0);
+                    PlanodeCorte.AxisX = new Tekla.Structures.Geometry3d.Vector(0, 100, 0);
+                    PlanodeCorte.AxisY = new Tekla.Structures.Geometry3d.Vector(0, 0, 100);
+                    Fit.Plane = PlanodeCorte;
+
+                    Fit.Insert();
+                    
+
+                }
+
+            }
             Modelo.CommitChanges();
         }
     }
