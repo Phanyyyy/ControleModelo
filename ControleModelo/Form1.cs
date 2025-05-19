@@ -285,17 +285,25 @@ namespace ControleModelo
                 {
                     var Peca = ObjetoModelo as Tekla.Structures.Model.Part;
                     
-                    var Fit = new Tekla.Structures.Model.Fitting();
+                    //var Fit = new Tekla.Structures.Model.Fitting();
 
-                    Fit.Father = Peca;
+                    //Fit.Father = Peca;
 
-                    var PlanodeCorte = new Tekla.Structures.Model.Plane();
-                    PlanodeCorte.Origin = new Tekla.Structures.Geometry3d.Point(0, 0, 0);
-                    PlanodeCorte.AxisX = new Tekla.Structures.Geometry3d.Vector(0, 100, 0);
-                    PlanodeCorte.AxisY = new Tekla.Structures.Geometry3d.Vector(0, 0, 100);
-                    Fit.Plane = PlanodeCorte;
+                    //var PlanodeCorte = new Tekla.Structures.Model.Plane();
+                    //PlanodeCorte.Origin = new Tekla.Structures.Geometry3d.Point(0, 0, 0);
+                    //PlanodeCorte.AxisX = new Tekla.Structures.Geometry3d.Vector(0, 100, 0);
+                    //PlanodeCorte.AxisY = new Tekla.Structures.Geometry3d.Vector(0, 0, 100);
+                    //Fit.Plane = PlanodeCorte;
 
-                    Fit.Insert();
+                    //Fit.Insert();
+
+                    foreach (var boo in Peca.GetBooleans())
+                    {
+                        var BooleanBase = boo as Tekla.Structures.Model.Boolean;
+                        var fit = BooleanBase as Tekla.Structures.Model.Fitting;
+
+                    }
+                    
                     
 
                 }
