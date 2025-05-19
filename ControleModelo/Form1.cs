@@ -32,30 +32,44 @@ namespace ControleModelo
                 ControleModelo.Classes.ControleModelo ModeloCurso = new ControleModelo.Classes.ControleModelo();
                 foreach (var objeto in SelecionadorDeObjetos.GetSelectedObjects())
                 {
-                    if (objeto is Tekla.Structures.Model.Beam)
+                    if (objeto is Tekla.Structures.Model.Part)
                     {
-                        var Viga = objeto as Tekla.Structures.Model.Beam;
-                        var VigaSistema = new VigaModelo(Viga);
-                        ModeloCurso.ObjetosModelo.Add(VigaSistema);
+                        var Peca  = objeto as Tekla.Structures.Model.Part;
+                        if (objeto is Tekla.Structures.Model.Beam)
+                        {
+                            var Viga = objeto as Tekla.Structures.Model.Beam;
+                            var VigaSistema = new VigaModelo(Viga);
+                            ModeloCurso.ObjetosModelo.Add(VigaSistema);
 
-                    }
-                    else if (objeto is Tekla.Structures.Model.ContourPlate)
-                    {
-                        var ChapaContorno = objeto as Tekla.Structures.Model.ContourPlate;
-                        var ChapaContornoSistema = new ChapaContornoModelo(ChapaContorno);
-                        ModeloCurso.ObjetosModelo.Add(ChapaContornoSistema);
-                    }
-                    else if (objeto is Tekla.Structures.Model.PolyBeam)
-                    {
-                        var PB = objeto as Tekla.Structures.Model.PolyBeam;
-                        var PolyBeamSistema = new PolyBeamModelo(PB);
-                        ModeloCurso.ObjetosModelo.Add(PolyBeamSistema);
-                    }
-                    else if (objeto is Tekla.Structures.Model.BentPlate)
-                    {
-                        var BP = objeto as Tekla.Structures.Model.BentPlate;
-                        var BentPlateSistema = new BentPlateModelo(BP);
-                        ModeloCurso.ObjetosModelo.Add(BentPlateSistema);
+                        }
+                        else if (objeto is Tekla.Structures.Model.ContourPlate)
+                        {
+                            var ChapaContorno = objeto as Tekla.Structures.Model.ContourPlate;
+                            var ChapaContornoSistema = new ChapaContornoModelo(ChapaContorno);
+                            ModeloCurso.ObjetosModelo.Add(ChapaContornoSistema);
+                        }
+                        else if (objeto is Tekla.Structures.Model.PolyBeam)
+                        {
+                            var PB = objeto as Tekla.Structures.Model.PolyBeam;
+                            var PolyBeamSistema = new PolyBeamModelo(PB);
+                            ModeloCurso.ObjetosModelo.Add(PolyBeamSistema);
+                        }
+                        else if (objeto is Tekla.Structures.Model.BentPlate)
+                        {
+                            var BP = objeto as Tekla.Structures.Model.BentPlate;
+                            var BentPlateSistema = new BentPlateModelo(BP);
+                            ModeloCurso.ObjetosModelo.Add(BentPlateSistema);
+                        }
+
+                        foreach(Tekla.Structures.Model.Boolean recorte in Peca.GetBooleans())
+                        {
+                            if (recorte is Tekla.Structures.Model.Fitting)
+                            {
+                                var fit = recorte as Tekla.Structures.Model.Fitting;
+                                var fittingModelo = new FittingModelo(fit);
+                                ModeloCurso.ObjetosModelo.Add(fittingModelo);
+                            }
+                        }
                     }
                 }
 
@@ -77,13 +91,17 @@ namespace ControleModelo
             {
 
                 var ModeloCurso = ControleModelo.Classes.ControleModelo.Carregar(ArquivoAbrir.FileName);
-                foreach (var ObjetoMod in ModeloCurso.ObjetosModelo)
+                var ObjetosPeca = ModeloCurso.ObjetosModelo.Where(obj => obj is PecaModelo).ToList();
+                var ObjetosRecortes = ModeloCurso.ObjetosModelo.Where(obj => obj is BooleanModelo).ToList();
+                var DictPecas = new Dictionary<Guid, Tekla.Structures.Model.Part>();
+                foreach (var ObjetoMod in ObjetosPeca)
                 {
                     if (ObjetoMod is VigaModelo)
                     {
                         var Vigamod = ObjetoMod as VigaModelo;
                         var VigaTekla = Vigamod.RetornaVigaTekla();
                         VigaTekla.Insert();
+                        DictPecas.Add(Vigamod.ID, VigaTekla);
                     }
                     else if (ObjetoMod is ChapaContornoModelo)
                     {
@@ -91,18 +109,31 @@ namespace ControleModelo
                         var ChapaTekla = CCMod.RetornaContourPlateTekla();
                         ChapaTekla.Insert();
                         ChapaTekla.Modify();
+                        DictPecas.Add(CCMod.ID, ChapaTekla);
                     }
                     else if (ObjetoMod is PolyBeamModelo)
                     {
                         var PBMod = ObjetoMod as PolyBeamModelo;
                         var PolyBeamTekla = PBMod.RetornaPolyBeamTekla();
                         PolyBeamTekla.Insert();
+                        DictPecas.Add(PBMod.ID, PolyBeamTekla);
                     }
                     else if (ObjetoMod is BentPlateModelo)
                     {
                         var BPMod = ObjetoMod as BentPlateModelo;
                         var BentPlateTekla = BPMod.CriarBentPlateNoTekla();
+                        DictPecas.Add(BPMod.ID, BentPlateTekla);
 
+                    }
+                }
+                foreach (var RecorteMod in ObjetosRecortes)
+                {
+                    if (RecorteMod is FittingModelo)
+                    { 
+                        var fittingmod = RecorteMod as FittingModelo;
+                        var fittingTekla = fittingmod.RetornaFittingTekla();
+                        fittingTekla.Father = DictPecas[fittingmod.Father];
+                        fittingTekla.Insert();
                     }
                 }
                 Modelo.CommitChanges();

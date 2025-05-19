@@ -35,6 +35,7 @@ namespace ControleModelo.Classes
         }
         public BentPlateModelo(Tekla.Structures.Model.BentPlate bentPlate)
         {
+            ID = bentPlate.Identifier.GUID;
             Nome = bentPlate.Name;
             Perfil = bentPlate.Profile.ProfileString;
             Material = bentPlate.Material.MaterialString;
@@ -111,6 +112,7 @@ namespace ControleModelo.Classes
         }
         public PolyBeamModelo(PolyBeam PolyBeamTekla)
         {
+            ID = PolyBeamTekla.Identifier.GUID;
             Nome = PolyBeamTekla.Name;
             Perfil = PolyBeamTekla.Profile.ProfileString;
             Material = PolyBeamTekla.Material.MaterialString;
@@ -164,6 +166,7 @@ namespace ControleModelo.Classes
         }
         public ChapaContornoModelo(ContourPlate ChapaContornoTekla)
         {
+            ID = ChapaContornoTekla.Identifier.GUID;
             Nome = ChapaContornoTekla.Name;
             Perfil = ChapaContornoTekla.Profile.ProfileString;
             Finish = ChapaContornoTekla.Finish;
@@ -244,6 +247,7 @@ namespace ControleModelo.Classes
         public VigaModelo() { }
         public VigaModelo(Tekla.Structures.Model.Beam vigaTekla)
         {
+            ID = vigaTekla.Identifier.GUID;
             Perfil = vigaTekla.Profile.ProfileString;
             Material = vigaTekla.Material.MaterialString;
             Nome = vigaTekla.Name;

@@ -23,6 +23,7 @@ namespace ControleModelo.Classes
                 typeof(ChapaContornoModelo),
                 typeof(PolyBeamModelo),
                 typeof(BentPlateModelo),
+                typeof(FittingModelo),
             });
             TextWriter writer = new StreamWriter(CaminhoArquivo);
             serializer.Serialize(writer, this);
@@ -36,6 +37,7 @@ namespace ControleModelo.Classes
                 typeof(ChapaContornoModelo),
                 typeof(PolyBeamModelo),
                 typeof(BentPlateModelo),
+                typeof(FittingModelo),
             });
             TextReader reader = new StreamReader(CaminhoArquivo);
             ControleModelo ModeloCarregado = serializer.Deserialize(reader) as ControleModelo;
