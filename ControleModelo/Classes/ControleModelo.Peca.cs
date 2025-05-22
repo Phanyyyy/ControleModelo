@@ -82,12 +82,10 @@ namespace ControleModelo.Classes
             foreach(ContourPointModelo ponto in ContornoChapa1)
             {
                 ChapaContorno1.Contour.ContourPoints.Add(ponto.RetornaContourPointTekla());
-
             }
-            foreach (ContourPointModelo ponto in ContornoChapa1)
+            foreach (ContourPointModelo ponto in ContornoChapa2)
             {
                 ChapaContorno2.Contour.ContourPoints.Add(ponto.RetornaContourPointTekla());
-
             }
             ChapaContorno1.Insert();
             ChapaContorno2.Insert();

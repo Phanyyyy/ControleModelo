@@ -342,5 +342,53 @@ namespace ControleModelo
             }
             Modelo.CommitChanges();
         }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            foreach (var ObjetoModelo in SelecionadorDeObjetos.GetSelectedObjects())
+            {
+                if (ObjetoModelo is Tekla.Structures.Model.Part)
+                {
+                    var Peca = ObjetoModelo as Tekla.Structures.Model.Part;
+
+                    var Fit = new Tekla.Structures.Model.CutPlane();
+
+                    Fit.Father = Peca;
+
+                    var PlanodeCorte = new Tekla.Structures.Model.Plane();
+                    PlanodeCorte.Origin = new Tekla.Structures.Geometry3d.Point(0, 0, 0);
+                    PlanodeCorte.AxisX = new Tekla.Structures.Geometry3d.Vector(0, 100, 0);
+                    PlanodeCorte.AxisY = new Tekla.Structures.Geometry3d.Vector(0, 0, 100);
+                    Fit.Plane = PlanodeCorte;
+
+                    var Normal = Tekla.Structures.Geometry3d.Vector.Cross(PlanodeCorte.AxisX, PlanodeCorte.AxisY).GetNormal();
+
+                    var vigaNormal = new Beam();
+                    vigaNormal.Profile.ProfileString = "D10";
+                    vigaNormal.Material.MaterialString = "A36";
+                    vigaNormal.StartPoint = PlanodeCorte.Origin;
+                    vigaNormal.EndPoint = PlanodeCorte.Origin + Normal * 500;
+                    vigaNormal.Insert();
+
+
+
+                    Fit.Insert();
+
+                    //foreach (var boo in Peca.GetBooleans())
+                    //{
+                    //    var BooleanBase = boo as Tekla.Structures.Model.Boolean;
+                    //    var fit = BooleanBase as Tekla.Structures.Model.Fitting;
+
+                    //}
+
+
+
+                }
+
+            }
+            Modelo.CommitChanges();
+        }
+
+    
     }
 }
